@@ -366,7 +366,7 @@ const CSS = `
     box-shadow: 0 12px 40px rgba(255,140,0,0.12); outline: none;
   }
   .card-photo { position: relative; padding-bottom: 60%; overflow: hidden; }
-  .card-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.85); }
+  .card-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; transform: scale(1.12); transform-origin: center bottom; filter: brightness(0.85); }
   .card-photo-fade { position: absolute; left: 0; right: 0; bottom: 0; height: 22%; background: linear-gradient(transparent, rgba(0,0,0,0.85)); }
   .card-body { padding: 14px 16px 16px; }
   .card-country { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ember); font-weight: 700; margin-bottom: 5px; }
@@ -386,7 +386,13 @@ const CSS = `
     background: #0f0f0f; border: 1px solid rgba(255,140,0,0.25); border-radius: 20px;
     width: 100%; max-width: 720px; max-height: 90vh; overflow-y: auto;
     box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.18) transparent;
   }
+  .modal-card::-webkit-scrollbar { width: 6px; }
+  .modal-card::-webkit-scrollbar-track { background: transparent; }
+  .modal-card::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 999px; }
+  .modal-card::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.32); }
   .modal-photo { position: relative; padding-bottom: 46%; overflow: hidden; border-radius: 20px 20px 0 0; }
   .modal-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .modal-photo-fade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 14%, transparent 55%); }
