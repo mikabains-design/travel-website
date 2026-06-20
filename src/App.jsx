@@ -1,313 +1,151 @@
-import { useState, useEffect, useMemo } from "react";
-
+import { useState, useEffect, useMemo, useRef } from "react";
 import { DESTINATIONS } from "./destinations";
 
-const ERA_CONFIG = {
-  "20s": {
-    label: "Do It In Your 20s",
-    subtitle: "High physical demand or extreme climate urgency — don't wait",
-    color: "#FF4D4D",
-    accent: "#FF8C00",
-    icon: " ",
-    bg: "linear-gradient(135deg, #1a0000 0%, #0d0d0d 100%)",
-  },
-  "30s": {
-    label: "Your 30s & Peak Years",
-    subtitle: "More budget, still fit — experiences that reward maturity",
-    color: "#FF8C00",
-    accent: "#FFD700",
-    icon: " ",
-    bg: "linear-gradient(135deg, #0d0800 0%, #0d0d0d 100%)",
-  },
-  kids: {
-    label: "With Kids",
-    subtitle: "Safe, magical, family-infrastructure ready — share it with them",
-    color: "#00C896",
-    accent: "#00FFB3",
-    icon: " ",
-    bg: "linear-gradient(135deg, #00100a 0%, #0d0d0d 100%)",
-  },
-  retired: {
-    label: "When You're Retired",
-    subtitle: "Time-rich, comfort-oriented — slow travel at its finest",
-    color: "#7B9FFF",
-    accent: "#C0CFFF",
-    icon: " ",
-    bg: "linear-gradient(135deg, #00060d 0%, #0d0d0d 100%)",
-  },
+/* ----------------------------------------------------------------------------
+   My Bucket List of Travel
+   Minimal landing: three stacked white sliders (budget, length, activity) + Go.
+   Reads only the current schema: estimatedCost, idealDays, physicalDemand,
+   image, info, tags, climateNote (optional), country, region, name.
+---------------------------------------------------------------------------- */
+
+const EMBER = "#FF8C00"; // results identity only (cards + modal)
+const PHYSICAL_LABELS = ["", "Easy", "Moderate", "Active", "Demanding", "Extreme"];
+const ACTIVITY_DIAL = ["", "Relaxed", "Easy-going", "Active", "Demanding", "Extreme"];
+
+// Budget slider: $1,500 across nearly the whole track; $10,000 sits just shy of
+// the right end; the final notch (>= BUDGET_MAX) means no cost ceiling.
+const BUDGET_MIN = 1500;
+const BUDGET_MAX = 10250; // last notch = Unlimited
+const BUDGET_STEP = 250;
+
+const DAYS_MIN = 3;
+const DAYS_MAX = 30;
+const ACT_MIN = 1;
+const ACT_MAX = 5;
+
+const fmtMoney = (n) => "$" + n.toLocaleString("en-CA");
+
+// White fill up to the thumb, faint track beyond it.
+const fillStyle = (val, min, max) => {
+  const pct = ((val - min) / (max - min)) * 100;
+  return {
+    backgroundImage: `linear-gradient(to right, #fff 0%, #fff ${pct}%, rgba(255,255,255,0.18) ${pct}%, rgba(255,255,255,0.18) 100%)`,
+  };
 };
 
-const URGENCY_LABELS = ["", "Low", "Low-Mod", "Moderate", "High", "CRITICAL"];
-const PHYSICAL_LABELS = ["", "Easy", "Moderate", "Active", "Demanding", "Extreme"];
-
-function UrgencyDot({ level }) {
-  const colors = ["", "#4CAF50", "#8BC34A", "#FFC107", "#FF5722", "#FF0000"];
-  return (
-    <span style={{
-      display: "inline-block",
-      width: 10,
-      height: 10,
-      borderRadius: "50%",
-      background: colors[level],
-      marginRight: 6,
-      boxShadow: level >= 4 ? `0 0 8px ${colors[level]}` : "none",
-    }} />
-  );
-}
+// ---- results-side pieces (keep the warm identity) -------------------------
 
 function PhysicalBar({ level }) {
   return (
     <div style={{ display: "flex", gap: 3, alignItems: "center" }}>
-      {[1, 2, 3, 4, 5].map(i => (
-        <div key={i} style={{
-          width: 14,
-          height: 6,
-          borderRadius: 2,
-          background: i <= level ? "#FF8C00" : "rgba(255,255,255,0.1)",
-          transition: "all 0.3s",
-        }} />
+      {[1, 2, 3, 4, 5].map((i) => (
+        <div
+          key={i}
+          style={{
+            width: 14,
+            height: 6,
+            borderRadius: 2,
+            background: i <= level ? EMBER : "rgba(255,255,255,0.1)",
+          }}
+        />
       ))}
     </div>
   );
 }
 
 function DestinationCard({ dest, onClick }) {
-  const era = ERA_CONFIG[dest.era];
   return (
-    <div
-      onClick={() => onClick(dest)}
-      style={{
-        cursor: "pointer",
-        borderRadius: 16,
-        overflow: "hidden",
-        background: "#111",
-        border: "1px solid rgba(255,255,255,0.08)",
-        transition: "transform 0.2s, border-color 0.2s, box-shadow 0.2s",
-        position: "relative",
-      }}
-      onMouseEnter={e => {
-        e.currentTarget.style.transform = "translateY(-4px)";
-        e.currentTarget.style.borderColor = era.color + "80";
-        e.currentTarget.style.boxShadow = `0 12px 40px ${era.color}20`;
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.transform = "translateY(0)";
-        e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
-        e.currentTarget.style.boxShadow = "none";
-      }}
-    >
-      <div style={{ position: "relative", paddingBottom: "60%", overflow: "hidden" }}>
+    <button type="button" onClick={() => onClick(dest)} className="card" aria-label={`Open ${dest.name}`}>
+      <div className="card-photo">
         <img
           src={dest.image}
           alt={dest.name}
-          style={{
-            position: "absolute",
-            top: 0, left: 0,
-            width: "100%", height: "100%",
-            objectFit: "cover",
-            filter: "brightness(0.85)",
-          }}
-          onError={e => {
+          loading="lazy"
+          onError={(e) => {
             e.target.style.display = "none";
             e.target.parentElement.style.background = "#1a1a1a";
           }}
         />
-        <div style={{
-          position: "absolute",
-          bottom: 0, left: 0, right: 0,
-          height: "15%",
-          background: "linear-gradient(transparent, rgba(0,0,0,0.9))",
-        }} />
-        {dest.climateUrgency >= 4 && (
-          <div style={{
-            position: "absolute",
-            top: 10, right: 10,
-            background: dest.climateUrgency === 5 ? "#FF0000" : "#FF5722",
-            color: "white",
-            fontSize: 10,
-            fontWeight: 700,
-            padding: "3px 8px",
-            borderRadius: 4,
-            letterSpacing: 1,
-            fontFamily: "monospace",
-          }}>
-            {dest.climateUrgency === 5 ? " ACT NOW" : "URGENT"}
-          </div>
-        )}
-        {dest.kidFriendly && (
-          <div style={{
-            position: "absolute",
-            top: 10, left: 10,
-            background: "rgba(0,200,150,0.85)",
-            color: "white",
-            fontSize: 10,
-            fontWeight: 700,
-            padding: "3px 8px",
-            borderRadius: 4,
-          }}>
-             Kid-Friendly
-          </div>
-        )}
+        <div className="card-photo-fade" />
       </div>
-      <div style={{ padding: "14px 16px 16px" }}>
-        <div style={{ fontSize: 11, color: era.color, fontWeight: 700, letterSpacing: 1.5, marginBottom: 4, textTransform: "uppercase", fontFamily: "monospace" }}>
-          {dest.country}
+      <div className="card-body">
+        <div className="card-country">{dest.country}</div>
+        <div className="card-name">{dest.name}</div>
+        <div className="card-meta">
+          <PhysicalBar level={dest.physicalDemand} />
+          <span className="card-dot">·</span>
+          <span>{dest.idealDays} days</span>
+          <span className="card-dot">·</span>
+          <span>{fmtMoney(dest.estimatedCost)}</span>
         </div>
-        <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", marginBottom: 10, lineHeight: 1.3 }}>
-          {dest.name}
-        </div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div>
-            <div style={{ fontSize: 10, color: "#666", marginBottom: 4, textTransform: "uppercase", letterSpacing: 1 }}>Physical</div>
-            <PhysicalBar level={dest.physicalDemand} />
-          </div>
-          <div style={{ textAlign: "right" }}>
-            <div style={{ fontSize: 10, color: "#666", marginBottom: 4, textTransform: "uppercase", letterSpacing: 1 }}>Climate</div>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-              <UrgencyDot level={dest.climateUrgency} />
-              <span style={{ fontSize: 12, color: "#aaa" }}>{URGENCY_LABELS[dest.climateUrgency]}</span>
-            </div>
-          </div>
-        </div>
-        <div style={{ marginTop: 10, display: "flex", gap: 4, flexWrap: "wrap" }}>
-          {dest.tags.slice(0, 3).map(tag => (
-            <span key={tag} style={{
-              fontSize: 10,
-              background: "rgba(255,255,255,0.06)",
-              color: "#888",
-              padding: "2px 7px",
-              borderRadius: 4,
-            }}>{tag}</span>
+        <div className="card-tags">
+          {dest.tags.slice(0, 3).map((tag) => (
+            <span key={tag} className="tag">{tag}</span>
           ))}
-          <span style={{
-            fontSize: 10,
-            background: "rgba(255,255,255,0.04)",
-            color: "#555",
-            padding: "2px 7px",
-            borderRadius: 4,
-          }}>{dest.cost}</span>
         </div>
       </div>
-    </div>
+    </button>
   );
 }
 
 function Modal({ dest, onClose }) {
-  const era = ERA_CONFIG[dest.era];
   useEffect(() => {
     const handler = (e) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", handler);
+      document.body.style.overflow = "";
+    };
   }, [onClose]);
 
+  const stats = [
+    { label: "Activity", value: PHYSICAL_LABELS[dest.physicalDemand], sub: <PhysicalBar level={dest.physicalDemand} /> },
+    { label: "Ideal length", value: `${dest.idealDays} days` },
+    { label: "Est. cost", value: `${fmtMoney(dest.estimatedCost)} CAD`, sub: <span className="stat-fine">per person from Toronto</span> },
+    { label: "Region", value: dest.region },
+  ];
+
   return (
-    <div
-      onClick={onClose}
-      style={{
-        position: "fixed", inset: 0,
-        background: "rgba(0,0,0,0.88)",
-        zIndex: 1000,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 20,
-        backdropFilter: "blur(6px)",
-      }}
-    >
-      <div
-        onClick={e => e.stopPropagation()}
-        style={{
-          background: "#0f0f0f",
-          border: `1px solid ${era.color}40`,
-          borderRadius: 20,
-          maxWidth: 720,
-          width: "100%",
-          maxHeight: "90vh",
-          overflowY: "auto",
-          boxShadow: `0 30px 80px ${era.color}20`,
-        }}
-      >
-        <div style={{ position: "relative", paddingBottom: "45%", overflow: "hidden", borderRadius: "20px 20px 0 0" }}>
-          <img
-            src={dest.image}
-            alt={dest.name}
-            style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", objectFit: "cover" }}
-            onError={e => { e.target.style.display = "none"; }}
-          />
-          <div style={{
-            position: "absolute", inset: 0,
-            background: "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 11%, transparent 55%)",
-          }} />
-          <button
-            onClick={onClose}
-            style={{
-              position: "absolute", top: 16, right: 16,
-              background: "rgba(0,0,0,0.6)",
-              border: "1px solid rgba(255,255,255,0.2)",
-              color: "white",
-              width: 36, height: 36,
-              borderRadius: "50%",
-              cursor: "pointer",
-              fontSize: 18,
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}
-          ></button>
-          <div style={{ position: "absolute", bottom: 20, left: 24, right: 24 }}>
-            <div style={{ fontSize: 11, color: era.color, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginBottom: 6, fontFamily: "monospace" }}>
-              {era.icon} {era.label}  {dest.country}
-            </div>
-            <div style={{ fontSize: 26, fontWeight: 800, color: "white", lineHeight: 1.2 }}>
-              {dest.name}
-            </div>
+    <div className="modal-scrim" onClick={onClose} role="dialog" aria-modal="true" aria-label={dest.name}>
+      <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-photo">
+          <img src={dest.image} alt={dest.name} onError={(e) => { e.target.style.display = "none"; }} />
+          <div className="modal-photo-fade" />
+          <button type="button" className="modal-close" onClick={onClose} aria-label="Close">×</button>
+          <div className="modal-title-wrap">
+            <div className="modal-eyebrow">{dest.country} · {dest.region}</div>
+            <h2 className="modal-name">{dest.name}</h2>
           </div>
         </div>
 
-        <div style={{ padding: "24px 28px 32px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 16, marginBottom: 24 }}>
-            {[
-              { label: "Physical Demand", value: PHYSICAL_LABELS[dest.physicalDemand], sub: <PhysicalBar level={dest.physicalDemand} /> },
-              { label: "Climate Urgency", value: URGENCY_LABELS[dest.climateUrgency], sub: <div style={{ display: "flex", alignItems: "center" }}><UrgencyDot level={dest.climateUrgency} /><span style={{ fontSize: 11, color: "#888" }}>out of 5</span></div> },
-              { label: "Kid-Friendly", value: dest.kidFriendly ? "Yes  " : "No" },
-              { label: "Cost Level", value: dest.cost },
-            ].map(item => (
-              <div key={item.label} style={{ background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "10px 12px" }}>
-                <div style={{ fontSize: 10, color: "#555", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{item.label}</div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: "#ddd" }}>{item.value}</div>
-                {item.sub && <div style={{ marginTop: 4 }}>{item.sub}</div>}
+        <div className="modal-body">
+          <div className="modal-stats">
+            {stats.map((s) => (
+              <div key={s.label} className="stat">
+                <div className="stat-label">{s.label}</div>
+                <div className="stat-value">{s.value}</div>
+                {s.sub && <div className="stat-sub">{s.sub}</div>}
               </div>
             ))}
           </div>
 
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: 11, color: era.color, textTransform: "uppercase", letterSpacing: 1.5, fontWeight: 700, marginBottom: 10, fontFamily: "monospace" }}>Overview</div>
-            <p style={{ color: "#ccc", lineHeight: 1.8, fontSize: 14, margin: 0 }}>{dest.blurb}</p>
-          </div>
-
-          <div style={{ marginBottom: 20, padding: "14px 16px", background: "rgba(255,140,0,0.07)", borderRadius: 10, borderLeft: `3px solid ${era.color}` }}>
-            <div style={{ fontSize: 11, color: era.color, textTransform: "uppercase", letterSpacing: 1.5, fontWeight: 700, marginBottom: 8, fontFamily: "monospace" }}>Why {era.label}?</div>
-            <p style={{ color: "#ccc", lineHeight: 1.7, fontSize: 13, margin: 0 }}>{dest.whyNow}</p>
+          <div className="modal-section">
+            <div className="modal-section-label">Overview</div>
+            <p className="modal-prose">{dest.info}</p>
           </div>
 
           {dest.climateNote && (
-            <div style={{
-              padding: "14px 16px",
-              background: dest.climateUrgency >= 4 ? "rgba(255,0,0,0.08)" : "rgba(255,255,255,0.04)",
-              borderRadius: 10,
-              borderLeft: `3px solid ${dest.climateUrgency >= 4 ? "#FF4444" : "#555"}`,
-              marginBottom: 20,
-            }}>
-              <div style={{ fontSize: 11, color: dest.climateUrgency >= 4 ? "#FF4444" : "#888", textTransform: "uppercase", letterSpacing: 1.5, fontWeight: 700, marginBottom: 8, fontFamily: "monospace" }}>
-                 Climate Note
-              </div>
-              <p style={{ color: "#ccc", lineHeight: 1.7, fontSize: 13, margin: 0 }}>{dest.climateNote}</p>
+            <div className="climate-note">
+              <div className="climate-note-label">Climate note</div>
+              <p className="modal-prose">{dest.climateNote}</p>
             </div>
           )}
 
-          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            <span style={{ fontSize: 12, color: "#555" }}>Best with:</span>
-            <span style={{ fontSize: 13, color: "#aaa", background: "rgba(255,255,255,0.05)", padding: "4px 10px", borderRadius: 6 }}>
-              {dest.companionIdeal}
-            </span>
+          <div className="modal-tags">
+            {dest.tags.map((tag) => (
+              <span key={tag} className="tag">{tag}</span>
+            ))}
           </div>
         </div>
       </div>
@@ -315,197 +153,270 @@ function Modal({ dest, onClose }) {
   );
 }
 
-function shuffleArray(array) {
-  const copy = [...array];
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
+// ---- main app --------------------------------------------------------------
+
 export default function App() {
-  const [activeEra, setActiveEra] = useState("20s");
-  const [selectedDest, setSelectedDest] = useState(null);
-  const [search, setSearch] = useState("");
+  const [budget, setBudget] = useState(4000);
+  const [days, setDays] = useState(10);
+  const [activity, setActivity] = useState(3);
+  const [revealed, setRevealed] = useState(false);
+  const [selected, setSelected] = useState(null);
 
- const shuffledEraDestinations = useMemo(() => {
-  return shuffleArray(
-    DESTINATIONS.filter(d => d.era === activeEra)
-  );
-}, [activeEra]);
+  const gridRef = useRef(null);
+  const noLimit = budget >= BUDGET_MAX;
 
-const filtered = shuffledEraDestinations.filter(d => {
-  if (!search) return true;
-  const q = search.toLowerCase();
+  const matches = useMemo(() => {
+    return DESTINATIONS
+      .filter(
+        (d) =>
+          d.estimatedCost >= budget * 0.4 &&
+          (noLimit || d.estimatedCost <= budget * 1.2) &&
+          d.idealDays >= days - 7 &&
+          d.idealDays <= days + 3 &&
+          (d.physicalDemand === activity || d.physicalDemand === activity - 1)
+      )
+      .sort((a, b) => a.estimatedCost - b.estimatedCost);
+  }, [budget, days, activity, noLimit]);
+
+  const go = () => {
+    setRevealed(true);
+    requestAnimationFrame(() => {
+      gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
   return (
-    d.name.toLowerCase().includes(q) ||
-    d.country.toLowerCase().includes(q) ||
-    d.region.toLowerCase().includes(q) ||
-    d.tags.some(t => t.toLowerCase().includes(q))
-  );
-});
+    <div className="page">
+      <style>{CSS}</style>
 
-  const era = ERA_CONFIG[activeEra];
-
-  return (
-    <div style={{
-      minHeight: "100vh",
-      background: "#080808",
-      color: "white",
-      fontFamily: "'Georgia', 'Times New Roman', serif",
-    }}>
-      {/* Header */}
-      <div style={{
-        background: "linear-gradient(180deg, #0a0a0a 0%, #080808 100%)",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
-        padding: "60px 40px 40px",
-        textAlign: "center",
-        position: "relative",
-        overflow: "hidden",
-      }}>
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "radial-gradient(ellipse at 50% 0%, rgba(255,140,0,0.05) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }} />
-        <div style={{ fontSize: 11, color: "#FF8C00", letterSpacing: 4, textTransform: "uppercase", marginBottom: 16, fontFamily: "monospace" }}>
-          A LIFE-STAGED TRAVEL GUIDE: 101 DESTINATIONS
-        </div>
-        <h1 style={{
-          fontSize: "clamp(36px, 6vw, 72px)",
-          fontWeight: 900,
-          margin: "0 0 16px",
-          background: "linear-gradient(135deg, #fff 0%, #aaa 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          lineHeight: 1.1,
-          letterSpacing: -2,
-        }}>
-          My Bucket List of Travel
-        </h1>
-        <p style={{ color: "#666", fontSize: 16, maxWidth: 540, margin: "0 auto", lineHeight: 1.7 }}>
-          Organized by physical capacity, climate urgency, and life stage —
-          because the right trip at the wrong time is a missed opportunity.
-        </p>
-      </div>
-
-      {/* Era Nav */}
-      <div style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 100,
-        background: "rgba(8,8,8,0.95)",
-        backdropFilter: "blur(12px)",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
-        padding: "0 40px",
-        display: "flex",
-        gap: 0,
-        overflowX: "auto",
-      }}>
-        {Object.entries(ERA_CONFIG).map(([key, cfg]) => (
-          <button
-            key={key}
-            onClick={() => { setActiveEra(key); setSearch(""); }}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: "20px 24px",
-              color: activeEra === key ? cfg.color : "#555",
-              borderBottom: activeEra === key ? `2px solid ${cfg.color}` : "2px solid transparent",
-              fontFamily: "monospace",
-              fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: 1,
-              textTransform: "uppercase",
-              whiteSpace: "nowrap",
-              transition: "all 0.2s",
-            }}
-          >
-            {cfg.icon} {cfg.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Main Content */}
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "40px 40px 80px" }}>
-        {/* Era Header */}
-        <div style={{ marginBottom: 32, display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
-          <div>
-            <div style={{ fontSize: 11, color: era.color, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", fontFamily: "monospace", marginBottom: 6 }}>
-              {era.icon} {era.label}
+      {/* Landing: three stacked sliders + Go */}
+      <section className="panel" aria-label="Trip filters">
+        <div className="dials">
+          <div className="dial">
+            <div className="dial-head">
+              <span className="dial-name">Budget</span>
+              <span className="dial-read">{noLimit ? "Unlimited" : fmtMoney(budget)}</span>
             </div>
-            <div style={{ fontSize: 16, color: "#666", maxWidth: 500 }}>{era.subtitle}</div>
+            <input
+              type="range"
+              min={BUDGET_MIN}
+              max={BUDGET_MAX}
+              step={BUDGET_STEP}
+              value={budget}
+              style={fillStyle(budget, BUDGET_MIN, BUDGET_MAX)}
+              onChange={(e) => setBudget(Number(e.target.value))}
+              aria-label="Budget per person in Canadian dollars"
+            />
+            <div className="dial-scale">
+              <span>{fmtMoney(BUDGET_MIN)}</span>
+              <span>Unlimited</span>
+            </div>
           </div>
-          <input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Filter by name, country, region, or tag..."
-            style={{
-              background: "rgba(255,255,255,0.05)",
-              border: "1px solid rgba(255,255,255,0.1)",
-              borderRadius: 8,
-              padding: "10px 16px",
-              color: "white",
-              fontSize: 13,
-              width: 340,
-              outline: "none",
-              fontFamily: "monospace",
-            }}
-          />
+
+          <div className="dial">
+            <div className="dial-head">
+              <span className="dial-name">Length</span>
+              <span className="dial-read">{days} days</span>
+            </div>
+            <input
+              type="range"
+              min={DAYS_MIN}
+              max={DAYS_MAX}
+              step={1}
+              value={days}
+              style={fillStyle(days, DAYS_MIN, DAYS_MAX)}
+              onChange={(e) => setDays(Number(e.target.value))}
+              aria-label="Trip length in days"
+            />
+            <div className="dial-scale">
+              <span>3 days</span>
+              <span>30 days</span>
+            </div>
+          </div>
+
+          <div className="dial">
+            <div className="dial-head">
+              <span className="dial-name">Activity</span>
+              <span className="dial-read">{ACTIVITY_DIAL[activity]}</span>
+            </div>
+            <input
+              type="range"
+              min={ACT_MIN}
+              max={ACT_MAX}
+              step={1}
+              value={activity}
+              style={fillStyle(activity, ACT_MIN, ACT_MAX)}
+              onChange={(e) => setActivity(Number(e.target.value))}
+              aria-label="How active the trip should be, 1 relaxed to 5 extreme"
+            />
+            <div className="dial-scale">
+              <span>Relaxed</span>
+              <span>Extreme</span>
+            </div>
+          </div>
         </div>
 
-        {/* Grid */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))",
-          gap: 20,
-        }}>
-          {filtered.map(dest => (
-            <DestinationCard key={dest.id} dest={dest} onClick={setSelectedDest} />
-          ))}
-        </div>
+        <button type="button" className="go" onClick={go}>Go</button>
+      </section>
 
-        {filtered.length === 0 && (
-          <div style={{ textAlign: "center", padding: "60px 0", color: "#444", fontSize: 14 }}>
-            No destinations match that search.
-          </div>
+      {/* Results */}
+      <main ref={gridRef} className="results">
+        {revealed && (
+          matches.length > 0 ? (
+            <div className="grid grid-in">
+              {matches.map((dest) => (
+                <DestinationCard key={dest.id} dest={dest} onClick={setSelected} />
+              ))}
+            </div>
+          ) : (
+            <div className="empty">
+              Nothing fits all three dials at once. Loosen one, usually budget or
+              days, and the trips come back.
+            </div>
+          )
         )}
+      </main>
 
-        {/* Legend */}
-        <div style={{
-          marginTop: 60,
-          padding: "24px 32px",
-          background: "rgba(255,255,255,0.03)",
-          borderRadius: 16,
-          border: "1px solid rgba(255,255,255,0.06)",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 32,
-        }}>
-          <div>
-            <div style={{ fontSize: 11, color: "#FF8C00", fontWeight: 700, letterSpacing: 2, marginBottom: 12, fontFamily: "monospace" }}>CLIMATE URGENCY SCALE</div>
-            {[1,2,3,4,5].map(i => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-                <UrgencyDot level={i} />
-                <span style={{ fontSize: 12, color: "#888" }}><strong style={{ color: "#aaa" }}>{i}</strong> — {URGENCY_LABELS[i]}</span>
-              </div>
-            ))}
-          </div>
-          <div>
-            <div style={{ fontSize: 11, color: "#FF8C00", fontWeight: 700, letterSpacing: 2, marginBottom: 12, fontFamily: "monospace" }}>PHYSICAL DEMAND SCALE</div>
-            {[1,2,3,4,5].map(i => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-                <PhysicalBar level={i} />
-                <span style={{ fontSize: 12, color: "#888" }}><strong style={{ color: "#aaa" }}>{i}</strong> — {PHYSICAL_LABELS[i]}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Modal */}
-      {selectedDest && <Modal dest={selectedDest} onClose={() => setSelectedDest(null)} />}
+      {selected && <Modal dest={selected} onClose={() => setSelected(null)} />}
     </div>
   );
 }
+
+// ---- styles ----------------------------------------------------------------
+
+const CSS = `
+  :root { --ember: ${EMBER}; }
+
+  .page {
+    min-height: 100vh;
+    background: #000;
+    color: #f5f3ef;
+    font-family: Georgia, 'Times New Roman', serif;
+  }
+  .dial-name, .dial-read, .dial-scale, .go,
+  .card-country, .modal-eyebrow, .modal-section-label, .climate-note-label,
+  .stat-label, .tag, .card-meta {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  /* landing */
+  .panel {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 52px; padding: 48px 24px;
+  }
+  .dials {
+    width: 100%; max-width: 520px;
+    display: flex; flex-direction: column; gap: 44px;
+  }
+  .dial { width: 100%; }
+  .dial-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
+  .dial-name { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: #8a8a8a; }
+  .dial-read { font-size: 24px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+  .dial-scale {
+    display: flex; justify-content: space-between; margin-top: 12px;
+    font-size: 11px; letter-spacing: 0.5px; color: #5a5a5a;
+  }
+
+  /* white range inputs: thin centered track, large hit area */
+  input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 20px; cursor: pointer;
+    background-color: transparent;
+    background-repeat: no-repeat; background-position: 0 center; background-size: 100% 4px;
+    border-radius: 4px;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #fff; border: none; cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+  }
+  input[type="range"]::-moz-range-track { background: transparent; height: 4px; border-radius: 4px; }
+  input[type="range"]::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 50%; background: #fff; border: none; cursor: pointer;
+  }
+  input[type="range"]:focus-visible { outline: 2px solid #fff; outline-offset: 6px; }
+
+  .go {
+    font-size: 13px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700;
+    color: #fff; background: transparent; border: 1px solid rgba(255,255,255,0.45);
+    border-radius: 8px; padding: 14px 56px; cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+  }
+  .go:hover { background: #fff; color: #000; }
+  .go:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+
+  /* results */
+  .results { max-width: 1280px; margin: 0 auto; padding: 32px 24px 96px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+  .grid-in { animation: fade-up 0.5s ease both; }
+  .empty { text-align: center; max-width: 600px; margin: -30vh auto 0; padding: 0 16px; color: #fff; font-size: 24px; line-height: 1.6; }
+  .empty { text-align: center; padding: 64px 16px; color: #d0d0d0; font-size: 18px; line-height: 1.7; }
+
+  /* card */
+  .card {
+    display: block; width: 100%; text-align: left; padding: 0; cursor: pointer;
+    background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px;
+    overflow: hidden; color: inherit; font: inherit;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  }
+  .card:hover, .card:focus-visible {
+    transform: translateY(-4px); border-color: rgba(255,140,0,0.5);
+    box-shadow: 0 12px 40px rgba(255,140,0,0.12); outline: none;
+  }
+  .card-photo { position: relative; padding-bottom: 60%; overflow: hidden; }
+  .card-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.85); }
+  .card-photo-fade { position: absolute; left: 0; right: 0; bottom: 0; height: 22%; background: linear-gradient(transparent, rgba(0,0,0,0.85)); }
+  .card-body { padding: 14px 16px 16px; }
+  .card-country { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ember); font-weight: 700; margin-bottom: 5px; }
+  .card-name { font-size: 17px; font-weight: 700; color: #fff; line-height: 1.3; margin-bottom: 12px; font-family: Georgia, serif; }
+  .card-meta { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #9a958c; }
+  .card-dot { color: #444; }
+  .card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px; }
+  .tag { font-size: 10px; letter-spacing: 0.3px; color: #8a857c; background: rgba(255,255,255,0.06); padding: 3px 8px; border-radius: 4px; }
+
+  /* modal */
+  .modal-scrim {
+    position: fixed; inset: 0; z-index: 1000; padding: 20px;
+    background: rgba(0,0,0,0.88); backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal-card {
+    background: #0f0f0f; border: 1px solid rgba(255,140,0,0.25); border-radius: 20px;
+    width: 100%; max-width: 720px; max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  }
+  .modal-photo { position: relative; padding-bottom: 46%; overflow: hidden; border-radius: 20px 20px 0 0; }
+  .modal-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .modal-photo-fade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 14%, transparent 55%); }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: #fff;
+    font-size: 22px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .modal-close:hover { background: rgba(0,0,0,0.85); }
+  .modal-title-wrap { position: absolute; left: 24px; right: 24px; bottom: 20px; }
+  .modal-eyebrow { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--ember); font-weight: 700; margin-bottom: 6px; }
+  .modal-name { margin: 0; font-size: 28px; font-weight: 700; color: #fff; line-height: 1.2; font-family: Georgia, serif; }
+  .modal-body { padding: 24px 28px 30px; }
+  .modal-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 26px; }
+  .stat { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 11px 13px; }
+  .stat-label { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #666; margin-bottom: 5px; }
+  .stat-value { font-size: 14px; font-weight: 700; color: #e6e2da; font-family: Georgia, serif; }
+  .stat-sub { margin-top: 6px; }
+  .stat-fine { font-family: Georgia, serif; font-size: 11px; color: #6a655d; }
+  .modal-section { margin-bottom: 22px; }
+  .modal-section-label, .climate-note-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ember); font-weight: 700; margin-bottom: 10px; }
+  .modal-prose { margin: 0; color: #cfcabf; line-height: 1.8; font-size: 15px; }
+  .climate-note { padding: 14px 16px; margin-bottom: 22px; border-radius: 10px; background: rgba(255,255,255,0.04); border-left: 3px solid #555; }
+  .climate-note-label { color: #9a958c; }
+  .modal-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  @media (max-width: 760px) {
+    .modal-stats { grid-template-columns: 1fr 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+`;
