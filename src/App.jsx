@@ -366,7 +366,7 @@ const CSS = `
     box-shadow: 0 12px 40px rgba(255,140,0,0.12); outline: none;
   }
   .card-photo { position: relative; padding-bottom: 60%; overflow: hidden; }
-  .card-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; transform: scale(1.12); transform-origin: center bottom; filter: brightness(0.85); }
+  .card-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; filter: brightness(0.85); }
   .card-photo-fade { position: absolute; left: 0; right: 0; bottom: 0; height: 22%; background: linear-gradient(transparent, rgba(0,0,0,0.85)); }
   .card-body { padding: 14px 16px 16px; }
   .card-country { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ember); font-weight: 700; margin-bottom: 5px; }
