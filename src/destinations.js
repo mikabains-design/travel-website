@@ -19,7 +19,7 @@ export const DESTINATIONS = [
     region: "North America",
     estimatedCost: 2200,
     idealDays: 7,
-    physicalDemand: 5,
+    physicalDemand: 4,
     kidFriendly: false,
     image: "/Cascade-Mountains.jpg",
     info: "Washington crams a gorgeous spread of wilderness into one corner of the map. There are glaciated volcanoes like Rainier and Baker for the mountaineers, and the moss-draped Hoh Rainforest and wild Pacific beaches of Olympic for everyone else. The two parks feel like different planets despite sitting only a few hours apart. Best of all, it's raw, uncrowded backcountry that still ends each day within reach of Seattle's coffee and oysters.",
