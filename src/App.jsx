@@ -359,14 +359,15 @@ const CSS = `
     display: block; width: 100%; text-align: left; padding: 0; cursor: pointer;
     background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px;
     overflow: hidden; color: inherit; font: inherit;
+    transform: translateZ(0);
     transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
   }
   .card:hover, .card:focus-visible {
-    transform: translateY(-4px); border-color: rgba(255,140,0,0.5);
+    transform: translateY(-4px) translateZ(0); border-color: rgba(255,140,0,0.5);
     box-shadow: 0 12px 40px rgba(255,140,0,0.12); outline: none;
   }
   .card-photo { position: relative; padding-bottom: 60%; overflow: hidden; }
-  .card-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; filter: brightness(0.85); }
+  .card-photo img { position: absolute; top: -1px; left: -1px; width: calc(100% + 2px); height: calc(100% + 2px); object-fit: cover; object-position: center; filter: brightness(0.85); }
   .card-photo-fade { position: absolute; left: 0; right: 0; bottom: 0; height: 22%; background: linear-gradient(transparent, rgba(0,0,0,0.85)); }
   .card-body { padding: 14px 16px 16px; }
   .card-country { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ember); font-weight: 700; margin-bottom: 5px; }
