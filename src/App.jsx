@@ -166,6 +166,19 @@ export default function App() {
   const noLimit = budget >= BUDGET_MAX;
 
   const matches = useMemo(() => {
+    // Normalised, weighted distance from the three dials. Lower = closer match.
+    // Each axis is divided by its own slider range so dollars, days, and the
+    // 1-5 activity scale become comparable; the weights set relative pull.
+    const W_BUDGET = 2, W_DAYS = 1.5, W_ACTIVITY = 1;
+    const matchScore = (d) => {
+      const budgetMiss = noLimit
+        ? 0
+        : Math.abs(d.estimatedCost - budget) / (BUDGET_MAX - BUDGET_MIN);
+      const daysMiss = Math.abs(d.idealDays - days) / (DAYS_MAX - DAYS_MIN);
+      const actMiss = Math.abs(d.physicalDemand - activity) / (ACT_MAX - ACT_MIN);
+      return budgetMiss * W_BUDGET + daysMiss * W_DAYS + actMiss * W_ACTIVITY;
+    };
+
     return DESTINATIONS
       .filter(
         (d) =>
@@ -175,7 +188,7 @@ export default function App() {
           d.idealDays <= days + 3 &&
           (d.physicalDemand === activity || d.physicalDemand === activity - 1)
       )
-      .sort((a, b) => a.estimatedCost - b.estimatedCost);
+      .sort((a, b) => matchScore(a) - matchScore(b));
   }, [budget, days, activity, noLimit]);
 
   const go = () => {
