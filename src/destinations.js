@@ -66,7 +66,7 @@ export const DESTINATIONS = [
   },
   {
     id: 6,
-    name: "SCUBA — Belize Blue Hole",
+    name: "The Great Blue Hole",
     country: "Belize",
     region: "Central America",
     estimatedCost: 4000,
@@ -80,7 +80,7 @@ export const DESTINATIONS = [
   },
   {
     id: 7,
-    name: "Morgan's Rock Ecolodge — Nicaragua",
+    name: "Morgan's Rock",
     country: "Nicaragua",
     region: "Central America",
     estimatedCost: 3200,
@@ -88,12 +88,12 @@ export const DESTINATIONS = [
     physicalDemand: 2,
     kidFriendly: true,
     image: "/Morgans-Rock-Nicaragua.jpg",
-    info: "A genuine eco-lodge on a private 4,000-acre reserve where Pacific dry forest tumbles straight into the sea. Howler monkeys are your alarm clock, turtles nest on the beach by night, and the cabins stay open to the breeze and the sound of the waves. The whole place runs at the unhurried pace of a country that's still one of Central America's best-kept secrets. It's the kind of stay where you arrive wound up and leave on the rhythm of the tides.",
+    info: "Morgan's Rock: A genuine eco-lodge on a private 4,000-acre reserve where Pacific dry forest tumbles straight into the sea. Howler monkeys are your alarm clock, turtles nest on the beach by night, and the cabins stay open to the breeze and the sound of the waves. The whole place runs at the unhurried pace of a country that's still one of Central America's best-kept secrets. It's the kind of stay where you arrive wound up and leave on the rhythm of the tides.",
     tags: ["ecolodge", "wildlife", "beach", "luxury"],
   },
   {
     id: 8,
-    name: "Cloud Forest — Costa Rica",
+    name: "Monteverde Cloud Forest",
     country: "Costa Rica",
     region: "Central America",
     estimatedCost: 2800,
@@ -107,7 +107,7 @@ export const DESTINATIONS = [
   },
   {
     id: 9,
-    name: "Amazon Adventure — Guyana & Kaieteur Falls",
+    name: "Amazon Rainforest & Kaieteur Falls",
     country: "Guyana",
     region: "South America",
     estimatedCost: 5000,
@@ -120,7 +120,7 @@ export const DESTINATIONS = [
   },
   {
     id: 10,
-    name: "Amazon River Cruise — Iquitos, Peru",
+    name: "Amazon River Cruise from Iquitos",
     country: "Peru",
     region: "South America",
     estimatedCost: 5500,
@@ -133,7 +133,7 @@ export const DESTINATIONS = [
   },
   {
     id: 11,
-    name: "Galápagos Island Yacht Tour",
+    name: "Galápagos Island Boat Tour",
     country: "Ecuador",
     region: "South America",
     estimatedCost: 14000,
@@ -147,7 +147,7 @@ export const DESTINATIONS = [
   },
   {
     id: 12,
-    name: "Colombia — Bogotá to Cartagena",
+    name: "Bogotá & Cartagena",
     country: "Colombia",
     region: "South America",
     estimatedCost: 3200,
@@ -160,7 +160,7 @@ export const DESTINATIONS = [
   },
   {
     id: 13,
-    name: "Patagonia — Torres del Paine Trekking",
+    name: "Patagonia: Torres del Paine",
     country: "Chile / Argentina",
     region: "South America",
     estimatedCost: 4500,
@@ -188,7 +188,7 @@ export const DESTINATIONS = [
   },
   {
     id: 15,
-    name: "Atacama Desert & Bolivia Salt Flats",
+    name: "Atacama Desert & Salar De Uyuni",
     country: "Chile / Bolivia",
     region: "South America",
     estimatedCost: 3800,
@@ -201,7 +201,7 @@ export const DESTINATIONS = [
   },
   {
     id: 16,
-    name: "Brazil — Rio, Florianópolis & Southern Islands",
+    name: "Rio, Florianópolis & Southern Islands",
     country: "Brazil",
     region: "South America",
     estimatedCost: 3200,
@@ -214,7 +214,7 @@ export const DESTINATIONS = [
   },
   {
     id: 17,
-    name: "Okavango Delta — Botswana Safari",
+    name: "Okavango Delta Safari",
     country: "Botswana",
     region: "Africa",
     estimatedCost: 12000,
@@ -228,7 +228,7 @@ export const DESTINATIONS = [
   },
   {
     id: 18,
-    name: "Skeleton Coast — Namibia",
+    name: "Skeleton Coast and Sossusvlei",
     country: "Namibia",
     region: "Africa",
     estimatedCost: 5500,
@@ -241,7 +241,7 @@ export const DESTINATIONS = [
   },
   {
     id: 19,
-    name: "Odzala-Kokoua — Republic of Congo",
+    name: "Odzala-Kokoua National Park",
     country: "Republic of Congo",
     region: "Africa",
     estimatedCost: 28000,
@@ -267,7 +267,7 @@ export const DESTINATIONS = [
   },
   {
     id: 21,
-    name: "Sahara & Ennedi Desert — Chad",
+    name: "Sahara & Ennedi Desert",
     country: "Chad",
     region: "Africa",
     estimatedCost: 8000,
@@ -281,7 +281,7 @@ export const DESTINATIONS = [
   },
   {
     id: 22,
-    name: "Bamako to Timbuktu — Mali",
+    name: "Bamako to Timbuktu",
     country: "Mali",
     region: "Africa",
     estimatedCost: 3800,
@@ -307,7 +307,7 @@ export const DESTINATIONS = [
   },
   {
     id: 24,
-    name: "Whale Sharks — Gulf of Tadjoura, Djibouti",
+    name: "Whale Sharks in the Gulf of Tadjoura",
     country: "Djibouti",
     region: "Africa",
     estimatedCost: 5000,
@@ -321,7 +321,7 @@ export const DESTINATIONS = [
   },
   {
     id: 25,
-    name: "Tour of Ethiopia",
+    name: "Tour of Ethiopia: Lalibela, The Danakil Depression, and Omo Valley",
     country: "Ethiopia",
     region: "Africa",
     estimatedCost: 4800,
@@ -335,7 +335,7 @@ export const DESTINATIONS = [
   },
   {
     id: 26,
-    name: "Great Migration Safari — Tanzania",
+    name: "Great Migration Safari",
     country: "Tanzania",
     region: "Africa",
     estimatedCost: 6500,
@@ -348,7 +348,7 @@ export const DESTINATIONS = [
   },
   {
     id: 27,
-    name: "Nile River Cruise & Great Pyramids — Egypt",
+    name: "Nile River Cruise & Great Pyramids",
     country: "Egypt",
     region: "Africa",
     estimatedCost: 2800,
@@ -361,7 +361,7 @@ export const DESTINATIONS = [
   },
   {
     id: 28,
-    name: "Pyramids of Meroë — Sudan",
+    name: "Pyramids of Meroë",
     country: "Sudan",
     region: "Africa",
     estimatedCost: 3500,
@@ -374,7 +374,7 @@ export const DESTINATIONS = [
   },
   {
     id: 29,
-    name: "Iron Ore Train — Mauritania",
+    name: "The Iron Ore Train",
     country: "Mauritania",
     region: "Africa",
     estimatedCost: 2800,
@@ -387,7 +387,7 @@ export const DESTINATIONS = [
   },
   {
     id: 30,
-    name: "Algeria — Algiers & Oran (Roman History)",
+    name: "Algiers, Oran, and Constantine: Roman History in North Africa",
     country: "Algeria",
     region: "Africa/Mediterranean",
     estimatedCost: 3400,
@@ -413,7 +413,7 @@ export const DESTINATIONS = [
   },
   {
     id: 32,
-    name: "Costa del Sol — Spain",
+    name: "Costa del Sol",
     country: "Spain",
     region: "Europe",
     estimatedCost: 2900,
@@ -426,7 +426,7 @@ export const DESTINATIONS = [
   },
   {
     id: 33,
-    name: "Island Hopping — Greece",
+    name: "Island Hopping In Greece",
     country: "Greece",
     region: "Europe",
     estimatedCost: 3400,
@@ -439,7 +439,7 @@ export const DESTINATIONS = [
   },
   {
     id: 34,
-    name: "Mountain Trekking — Georgia (Caucasus)",
+    name: "Mountain Trekking in the Caucuses",
     country: "Georgia",
     region: "Europe/Asia",
     estimatedCost: 2500,
@@ -479,7 +479,7 @@ export const DESTINATIONS = [
   },
   {
     id: 37,
-    name: "Backwaters of Kerala — India",
+    name: "Backwaters of Kerala",
     country: "India",
     region: "Asia",
     estimatedCost: 2700,
@@ -493,7 +493,7 @@ export const DESTINATIONS = [
   },
   {
     id: 38,
-    name: "Himalayas in Sikkim — India",
+    name: "Himalayas in Sikkim",
     country: "India",
     region: "Asia",
     estimatedCost: 4000,
@@ -507,7 +507,7 @@ export const DESTINATIONS = [
   },
   {
     id: 39,
-    name: "Lodge-to-Lodge Tour — Bhutan",
+    name: "Lodge-to-Lodge Tour Across Bhutan",
     country: "Bhutan",
     region: "Asia",
     estimatedCost: 6500,
@@ -520,7 +520,7 @@ export const DESTINATIONS = [
   },
   {
     id: 40,
-    name: "Manaslu or Annapurna Base Camp Trek — Nepal",
+    name: "Manaslu/Annapurna Base Camp Trek",
     country: "Nepal",
     region: "Asia",
     estimatedCost: 4500,
@@ -533,7 +533,7 @@ export const DESTINATIONS = [
   },
   {
     id: 41,
-    name: "Meghalaya & Assam — Northeast India",
+    name: "Meghalaya & Assam",
     country: "India",
     region: "Asia",
     estimatedCost: 3200,
@@ -546,7 +546,7 @@ export const DESTINATIONS = [
   },
   {
     id: 42,
-    name: "Tokyo & Kyoto — Japan",
+    name: "Tokyo & Kyoto",
     country: "Japan",
     region: "Asia",
     estimatedCost: 4000,
@@ -559,7 +559,7 @@ export const DESTINATIONS = [
   },
   {
     id: 43,
-    name: "Diving with Humpbacks — Tonga",
+    name: "Diving with Humpback Whales in Tonga",
     country: "Tonga",
     region: "Oceania",
     estimatedCost: 7000,
@@ -573,7 +573,7 @@ export const DESTINATIONS = [
   },
   {
     id: 44,
-    name: "Great Barrier Reef — Australia",
+    name: "The Great Barrier Reef",
     country: "Australia",
     region: "Oceania",
     estimatedCost: 6000,
@@ -587,7 +587,7 @@ export const DESTINATIONS = [
   },
   {
     id: 45,
-    name: "Sri Lanka — Colombo to Ella",
+    name: "Journey Across Sri Lanka",
     country: "Sri Lanka",
     region: "Asia",
     estimatedCost: 3000,
@@ -600,7 +600,7 @@ export const DESTINATIONS = [
   },
   {
     id: 46,
-    name: "Son Doong Cave — World's Largest Cave",
+    name: "The World's Largest Cave: Son Doong",
     country: "Vietnam",
     region: "Asia",
     estimatedCost: 7500,
@@ -613,7 +613,7 @@ export const DESTINATIONS = [
   },
   {
     id: 47,
-    name: "Northern Vietnam — Ha Giang Loop",
+    name: "The Ha Giang Loop, Hanoi, and Ha Long Bay",
     country: "Vietnam",
     region: "Asia",
     estimatedCost: 2700,
@@ -626,7 +626,7 @@ export const DESTINATIONS = [
   },
   {
     id: 48,
-    name: "New Zealand South Island Road Trip",
+    name: "New Zealand's South Island Road Trip",
     country: "New Zealand",
     region: "Oceania",
     estimatedCost: 5800,
@@ -653,7 +653,7 @@ export const DESTINATIONS = [
   },
   {
     id: 50,
-    name: "Central Asia: Kyrgyzstan, Pamirs, Uzbekistan, Turkmenistan",
+    name: "Central Asia: The Pamir Highway and the Silk Road",
     country: "Central Asia",
     region: "Asia",
     estimatedCost: 6000,
@@ -666,7 +666,7 @@ export const DESTINATIONS = [
   },
   {
     id: 51,
-    name: "Trans-Mongolian Railway — Moscow to Beijing",
+    name: "Trans-Mongolian Railway: Moscow to Beijing",
     country: "Russia / Mongolia / China",
     region: "Asia/Europe",
     estimatedCost: 5200,
@@ -679,7 +679,7 @@ export const DESTINATIONS = [
   },
   {
     id: 52,
-    name: "Cambodia & Laos — Angkor to Luang Prabang",
+    name: "Cambodia & Laos: Angkor to Luang Prabang",
     country: "Cambodia / Laos",
     region: "Asia",
     estimatedCost: 3200,
@@ -692,7 +692,7 @@ export const DESTINATIONS = [
   },
  {
     id: 53,
-    name: "Gorilla Trekking — Rwanda",
+    name: "Gorilla Trekking in Rwanda",
     country: "Rwanda",
     region: "Africa",
     estimatedCost: 5500,
@@ -705,7 +705,7 @@ export const DESTINATIONS = [
   },
   {
     id: 54,
-    name: "Lopé & Ivindo National Park — Gabon",
+    name: "Lopé & Ivindo National Park",
     country: "Gabon",
     region: "Africa",
     estimatedCost: 7000,
@@ -718,7 +718,7 @@ export const DESTINATIONS = [
   },
   {
     id: 55,
-    name: "Torngat Mountains — Labrador, Canada",
+    name: "Torngat Mountains in Labrador",
     country: "Canada",
     region: "North America",
     estimatedCost: 9500,
@@ -731,7 +731,7 @@ export const DESTINATIONS = [
   },
   {
     id: 56,
-    name: "Auyuittuq NP — Mount Thor & Baffin Island",
+    name: "Auyuittuq National Park: Mount Thor & Baffin Island",
     country: "Canada",
     region: "North America",
     estimatedCost: 7500,
@@ -745,7 +745,7 @@ export const DESTINATIONS = [
   },
   {
     id: 57,
-    name: "Nahanni River Rafting — Northwest Territories",
+    name: "Nahanni River Rafting in the Northwest Territories",
     country: "Canada",
     region: "North America",
     estimatedCost: 13000,
@@ -758,10 +758,10 @@ export const DESTINATIONS = [
   },
   {
     id: 58,
-    name: "White Desert Antarctica — South Pole",
+    name: "White Desert Antarctica: Emperor Penguins and the South Pole",
     country: "Antarctica",
     region: "Antarctica",
-    estimatedCost: 140000,
+    estimatedCost: 120000,
     idealDays: 12,
     physicalDemand: 2,
     kidFriendly: false,
@@ -772,7 +772,7 @@ export const DESTINATIONS = [
   },
   {
     id: 59,
-    name: "Dolomites — Via Ferrata & Hiking",
+    name: "Hiking in the Dolomites",
     country: "Italy",
     region: "Europe",
     estimatedCost: 3200,
@@ -786,8 +786,8 @@ export const DESTINATIONS = [
   },
   {
     id: 60,
-    name: "Balkans Road Trip — Croatia to Montenegro",
-    country: "Croatia / Montenegro / Bosnia",
+    name: "Balkans Road Trip: Croatia and Montenegro",
+    country: "Croatia / Montenegro",
     region: "Europe",
     estimatedCost: 2900,
     idealDays: 14,
@@ -799,7 +799,7 @@ export const DESTINATIONS = [
   },
   {
     id: 61,
-    name: "Maldives — Luxury Beach Resort",
+    name: "Luxury Relaxation in the Maldives",
     country: "Maldives",
     region: "Asia",
     estimatedCost: 5500,
@@ -813,7 +813,7 @@ export const DESTINATIONS = [
   },
   {
     id: 62,
-    name: "The Karakoram Highway — Pakistan",
+    name: "The Karakoram Highway",
     country: "Pakistan",
     region: "Asia",
     estimatedCost: 3000,
@@ -827,7 +827,7 @@ export const DESTINATIONS = [
   },
   {
     id: 63,
-    name: "Victoria Falls — Zambia & Zimbabwe",
+    name: "Victoria Falls",
     country: "Zambia / Zimbabwe",
     region: "Africa",
     estimatedCost: 6000,
@@ -841,7 +841,7 @@ export const DESTINATIONS = [
   },
   {
     id: 64,
-    name: "Kisawa Sanctuary — Mozambique",
+    name: "Kisawa Sanctuary",
     country: "Mozambique",
     region: "Africa",
     estimatedCost: 20000,
@@ -854,7 +854,7 @@ export const DESTINATIONS = [
   },
   {
     id: 65,
-    name: "North Island — Seychelles",
+    name: "North Island",
     country: "Seychelles",
     region: "Africa",
     estimatedCost: 28000,
@@ -867,7 +867,7 @@ export const DESTINATIONS = [
   },
   {
     id: 66,
-    name: "Tamanrasset — Deep Sahara, Algeria",
+    name: "Tamanrasset",
     country: "Algeria",
     region: "Africa",
     estimatedCost: 3500,
@@ -893,7 +893,7 @@ export const DESTINATIONS = [
   },
   {
     id: 68,
-    name: "Urban Australia — Sydney, Melbourne, Adelaide",
+    name: "Urban Australia: Sydney, Melbourne, Adelaide",
     country: "Australia",
     region: "Oceania",
     estimatedCost: 5800,
@@ -906,7 +906,7 @@ export const DESTINATIONS = [
   },
   {
     id: 69,
-    name: "Solomon Islands — Island Hopping",
+    name: "Island Hopping the Solomon Islands",
     country: "Solomon Islands",
     region: "Oceania",
     estimatedCost: 6500,
@@ -920,7 +920,7 @@ export const DESTINATIONS = [
   },
   {
     id: 70,
-    name: "Scuba Diving — Palau",
+    name: "Diving in Palau",
     country: "Palau",
     region: "Oceania",
     estimatedCost: 7000,
@@ -934,8 +934,8 @@ export const DESTINATIONS = [
   },
   {
     id: 71,
-    name: "United Airlines Island Hopper — Micronesia",
-    country: "Micronesia (USA)",
+    name: "The Island Hopper",
+    country: "Micronesia / Guam (USA)",
     region: "Oceania",
     estimatedCost: 6300,
     idealDays: 14,
@@ -947,7 +947,7 @@ export const DESTINATIONS = [
   },
   {
     id: 72,
-    name: "Korea — Seoul, Busan, and Jeju",
+    name: "Seoul, Busan, and Jeju",
     country: "South Korea",
     region: "Asia",
     estimatedCost: 3400,
@@ -960,7 +960,7 @@ export const DESTINATIONS = [
   },
   {
     id: 73,
-    name: "Chiang Mai, Thailand",
+    name: "Chiang Mai",
     country: "Thailand",
     region: "Asia",
     estimatedCost: 2600,
@@ -973,7 +973,7 @@ export const DESTINATIONS = [
   },
   {
     id: 74,
-    name: "Cappadocia, Turkey",
+    name: "Cappadocia",
     country: "Turkey",
     region: "Europe",
     estimatedCost: 2700,
@@ -986,7 +986,7 @@ export const DESTINATIONS = [
   },
   {
     id: 75,
-    name: "Julian Alps & Lake Bled, Slovenia",
+    name: "Julian Alps & Lake Bled",
     country: "Slovenia",
     region: "Europe",
     estimatedCost: 2700,
@@ -999,7 +999,7 @@ export const DESTINATIONS = [
   },
   {
     id: 76,
-    name: "Taj Mahal & Golden Triangle, India",
+    name: "Taj Mahal & The Golden Triangle",
     country: "India",
     region: "Asia",
     estimatedCost: 3400,
@@ -1012,7 +1012,7 @@ export const DESTINATIONS = [
   },
   {
     id: 77,
-    name: "Mount Hua — Shaanxi Province, China",
+    name: "Mount Hua, Xi'an, and Shaanxi Province",
     country: "China",
     region: "Asia",
     estimatedCost: 2800,
@@ -1038,7 +1038,7 @@ export const DESTINATIONS = [
   },
   {
     id: 79,
-    name: "Bagan, Myanmar",
+    name: "Bagan",
     country: "Myanmar",
     region: "Asia",
     estimatedCost: 3800,
@@ -1064,7 +1064,7 @@ export const DESTINATIONS = [
   },
   {
     id: 81,
-    name: "Lion's Head & Cape Town, South Africa",
+    name: "Cape Town",
     country: "South Africa",
     region: "Africa",
     estimatedCost: 4000,
@@ -1078,7 +1078,7 @@ export const DESTINATIONS = [
   },
   {
     id: 82,
-    name: "Iceland Ring Road",
+    name: "Iceland's Ring Road",
     country: "Iceland",
     region: "Europe",
     estimatedCost: 4000,
@@ -1092,7 +1092,7 @@ export const DESTINATIONS = [
   },
   {
     id: 83,
-    name: "Petra, Jordan",
+    name: "Petra",
     country: "Jordan",
     region: "Middle East",
     estimatedCost: 3200,
@@ -1105,7 +1105,7 @@ export const DESTINATIONS = [
   },
   {
     id: 84,
-    name: "Bandiagara Escarpment, Mali",
+    name: "Bandiagara Escarpment",
     country: "Mali",
     region: "Africa",
     estimatedCost: 3200,
@@ -1119,7 +1119,7 @@ export const DESTINATIONS = [
   },
   {
     id: 85,
-    name: "Uluru, Australia",
+    name: "Uluru",
     country: "Australia",
     region: "Oceania",
     estimatedCost: 5000,
@@ -1132,7 +1132,7 @@ export const DESTINATIONS = [
   },
   {
     id: 86,
-    name: "Huayhuash Circuit, Peru",
+    name: "Huayhuash Circuit",
     country: "Peru",
     region: "South America",
     estimatedCost: 4200,
@@ -1146,7 +1146,7 @@ export const DESTINATIONS = [
   },
   {
     id: 87,
-    name: "White Sands NP, New Mexico",
+    name: "White Sands National Park, New Mexico",
     country: "USA",
     region: "North America",
     estimatedCost: 1500,
@@ -1173,7 +1173,7 @@ export const DESTINATIONS = [
   },
   {
     id: 89,
-    name: "Skiing Les Trois Vallées, France",
+    name: "Skiing Les Trois Vallées",
     country: "France",
     region: "Europe",
     estimatedCost: 4500,
@@ -1187,7 +1187,7 @@ export const DESTINATIONS = [
   },
   {
     id: 90,
-    name: "Rome, Italy",
+    name: "Rome",
     country: "Italy",
     region: "Europe",
     estimatedCost: 2200,
@@ -1200,7 +1200,7 @@ export const DESTINATIONS = [
   },
   {
     id: 91,
-    name: "Madrid, Spain",
+    name: "Madrid",
     country: "Spain",
     region: "Europe",
     estimatedCost: 2000,
@@ -1213,7 +1213,7 @@ export const DESTINATIONS = [
   },
   {
     id: 92,
-    name: "Finnish Lapland, Finland",
+    name: "Finnish Lapland",
     country: "Finland",
     region: "Europe",
     estimatedCost: 4500,
@@ -1227,7 +1227,7 @@ export const DESTINATIONS = [
   },
   {
     id: 93,
-    name: "Naples & the Amalfi Coast, Italy",
+    name: "Naples & the Amalfi Coast",
     country: "Italy",
     region: "Europe",
     estimatedCost: 2900,
@@ -1253,7 +1253,7 @@ export const DESTINATIONS = [
   },
   {
     id: 95,
-    name: "Avenue of the Baobabs, Madagascar",
+    name: "Avenue of the Baobabs",
     country: "Madagascar",
     region: "Africa",
     estimatedCost: 3600,
@@ -1267,7 +1267,7 @@ export const DESTINATIONS = [
   },
   {
     id: 96,
-    name: "Borobudur, Indonesia",
+    name: "Borobudur & Central Java",
     country: "Indonesia",
     region: "Asia",
     estimatedCost: 3200,
@@ -1280,7 +1280,7 @@ export const DESTINATIONS = [
   },
   {
     id: 97,
-    name: "Plitvice Lakes NP, Croatia",
+    name: "Plitvice Lakes National Park",
     country: "Croatia",
     region: "Europe",
     estimatedCost: 2500,
@@ -1293,7 +1293,7 @@ export const DESTINATIONS = [
   },
   {
     id: 98,
-    name: "Denali National Park, Alaska",
+    name: "Denali National Park",
     country: "USA",
     region: "North America",
     estimatedCost: 2900,
@@ -1307,7 +1307,7 @@ export const DESTINATIONS = [
   },
   {
     id: 99,
-    name: "Azores Islands, Portugal",
+    name: "Azores Islands",
     country: "Portugal",
     region: "Europe",
     estimatedCost: 2500,
@@ -1648,7 +1648,7 @@ export const DESTINATIONS = [
   },
   {
     id: 125,
-    name: "Côte d'Azur, France",
+    name: "Côte d'Azur",
     country: "France",
     region: "Europe",
     estimatedCost: 3500,
@@ -1687,7 +1687,7 @@ export const DESTINATIONS = [
   },
   {
     id: 128,
-    name: "Riga, Latvia",
+    name: "Riga",
     country: "Latvia",
     region: "Europe",
     estimatedCost: 1900,
@@ -1700,7 +1700,7 @@ export const DESTINATIONS = [
   },
   {
     id: 129,
-    name: "Bergen, Norway",
+    name: "Bergen & the Fjords of Norway",
     country: "Norway",
     region: "Europe",
     estimatedCost: 3000,
