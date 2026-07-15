@@ -1704,7 +1704,7 @@ export const DESTINATIONS = [
     country: "Norway",
     region: "Europe",
     estimatedCost: 3000,
-    idealDays: 5,
+    idealDays: 7,
     physicalDemand: 2,
     kidFriendly: true,
     image: "/Bergen-Norway.jpg",
